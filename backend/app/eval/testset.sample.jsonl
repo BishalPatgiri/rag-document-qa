@@ -1,0 +1,3 @@
+{"id": "q1", "question": "What is the maximum supported current?", "relevant_documents": ["datasheet.pdf"], "reference_answer": "The device supports up to 5A continuous current."}
+{"id": "q2", "question": "What is the warranty period?", "relevant_documents": ["terms.pdf"], "reference_answer": "The warranty period is 24 months from purchase."}
+{"id": "q3", "question": "Which operating temperature range is specified?", "relevant_documents": ["datasheet.pdf"], "reference_answer": "Operating temperature is -20C to 85C."}

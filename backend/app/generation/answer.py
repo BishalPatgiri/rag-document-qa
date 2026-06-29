@@ -39,6 +39,16 @@ def build_messages(query: str, chunks: list[RetrievedChunk]) -> list[dict]:
     ]
 
 
+async def generate_answer(query: str, chunks: list[RetrievedChunk]):
+    """Non-streaming answer. Returns (answer_text, usage) for eval/tracking."""
+    response = await get_client().chat.completions.create(
+        model=settings.chat_model,
+        messages=build_messages(query, chunks),
+        temperature=0.0,
+    )
+    return response.choices[0].message.content or "", response.usage
+
+
 async def stream_answer(
     query: str, chunks: list[RetrievedChunk]
 ) -> AsyncIterator[str]:
