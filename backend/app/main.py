@@ -8,6 +8,7 @@ from app.api import (
     routes_health,
     routes_query,
     routes_search,
+    routes_stats,
 )
 from app.config import settings
 
@@ -32,6 +33,7 @@ app.include_router(routes_health.router)
 app.include_router(routes_documents.router)
 app.include_router(routes_search.router)
 app.include_router(routes_query.router)
+app.include_router(routes_stats.router)
 
 
 @app.get("/")

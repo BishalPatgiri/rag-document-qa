@@ -37,3 +37,13 @@ class QueryRequest(BaseModel):
     query: str = Field(min_length=1)
     mode: RetrievalMode = RetrievalMode.hybrid
     top_k: int | None = Field(default=None, ge=1, le=50)
+
+
+class StatsOut(BaseModel):
+    total_queries: int
+    avg_latency_ms: float
+    total_prompt_tokens: int
+    total_completion_tokens: int
+    total_embedding_tokens: int
+    total_cost_usd: float
+    avg_cost_usd: float

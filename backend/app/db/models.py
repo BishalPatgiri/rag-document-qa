@@ -2,8 +2,10 @@ from datetime import datetime
 
 from pgvector.sqlalchemy import Vector
 from sqlalchemy import (
+    JSON,
     Computed,
     DateTime,
+    Float,
     ForeignKey,
     Index,
     Integer,
@@ -65,4 +67,21 @@ class Chunk(Base):
             postgresql_ops={"embedding": "vector_cosine_ops"},
         ),
         Index("ix_chunks_tsv", "tsv", postgresql_using="gin"),
+    )
+
+
+class QueryLog(Base):
+    __tablename__ = "query_logs"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    question: Mapped[str] = mapped_column(Text)
+    mode: Mapped[str] = mapped_column(String(16))
+    retrieved_chunk_ids: Mapped[list[int]] = mapped_column(JSON, default=list)
+    latency_ms: Mapped[float] = mapped_column(Float, default=0.0)
+    prompt_tokens: Mapped[int] = mapped_column(Integer, default=0)
+    completion_tokens: Mapped[int] = mapped_column(Integer, default=0)
+    embedding_tokens: Mapped[int] = mapped_column(Integer, default=0)
+    est_cost_usd: Mapped[float] = mapped_column(Float, default=0.0)
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), server_default=func.now()
     )

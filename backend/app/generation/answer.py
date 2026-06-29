@@ -50,16 +50,26 @@ async def generate_answer(query: str, chunks: list[RetrievedChunk]):
 
 
 async def stream_answer(
-    query: str, chunks: list[RetrievedChunk]
+    query: str,
+    chunks: list[RetrievedChunk],
+    usage_out: dict | None = None,
 ) -> AsyncIterator[str]:
-    """Yield answer text deltas from the chat model as they arrive."""
+    """Yield answer text deltas from the chat model as they arrive.
+
+    If ``usage_out`` is provided, it is populated with prompt/completion token
+    counts from the final usage event.
+    """
     stream = await get_client().chat.completions.create(
         model=settings.chat_model,
         messages=build_messages(query, chunks),
         stream=True,
         temperature=0.0,
+        stream_options={"include_usage": True},
     )
     async for event in stream:
+        if event.usage is not None and usage_out is not None:
+            usage_out["prompt_tokens"] = event.usage.prompt_tokens
+            usage_out["completion_tokens"] = event.usage.completion_tokens
         if not event.choices:
             continue
         delta = event.choices[0].delta.content
